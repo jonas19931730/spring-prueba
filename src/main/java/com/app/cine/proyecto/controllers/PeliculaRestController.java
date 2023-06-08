@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.cine.proyecto.models.entity.Pelicula;
 import com.app.cine.proyecto.models.service.PeliculaService;
+import com.app.cine.proyecto.util.Util;
 
 
 @RestController
@@ -51,7 +52,16 @@ public class PeliculaRestController {
 		
 		Map<String,Object> response = new LinkedHashMap<>();
 		
+		
+		
 		try{
+			
+			Map<String,Object> validacion = Util.validarJson("/model/schema.json", pelicula);
+			
+			if(validacion.get("estado").equals("error")) {
+				return new ResponseEntity<Map<String,Object>>(validacion,HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
 			peliculaSave = peliculaService.guardar(pelicula);
 			
 			if(peliculaSave == null) {
@@ -81,6 +91,13 @@ public class PeliculaRestController {
 		Map<String,Object> response = new LinkedHashMap<>();
 		
 		try{
+			
+			Map<String,Object> validacion = Util.validarJson("/model/schema.json", pelicula);
+			
+			if(validacion.get("estado").equals("error")) {
+				return new ResponseEntity<Map<String,Object>>(validacion,HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
 			peliculaAct = peliculaService.guardar(pelicula);
 			
 			if(peliculaAct == null) {
